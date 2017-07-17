@@ -1,7 +1,7 @@
 {
   "name": "hubot-skype-bot",
   "description": "A Hubot adapter for the official Microsoft Bot Framework (Preview).",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "Ian Lai <os@fyianlai.com>",
   "contributors": [
     "Adrian Lopez <adrianlzt@gmail.com>"
@@ -24,7 +24,7 @@
     "url": "https://github.com/ClaudeBot/hubot-skype-bot/issues"
   },
   "dependencies": {
-    "botbuilder": "~3.2.2"
+    "botbuilder": "~3.5.0"
   },
   "peerDependencies": {},
   "main": "./src/skype.coffee",

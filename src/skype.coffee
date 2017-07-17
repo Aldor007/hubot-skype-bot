@@ -20,6 +20,9 @@ class Skype extends Adapter
         user = @robot.brain.userForId(userId)
         if typeof address != 'undefined'
             user.address = address
+            if address.conversation
+                user.room = address.conversation.id
+            @robot.brain.set('sky-' + address.conversation.id, address)
         @robot.logger.debug("hubot-skype-bot: new user : ", user)
         user
 
@@ -39,6 +42,11 @@ class Skype extends Adapter
     # Function used by Hubot to answer
     send: (envelope, strings...) ->
         @robot.logger.debug "Send"
+        debugObject = JSON.stringify(envelope)
+        if typeof envelope.user == 'undefined'
+            addr = @robot.brain.get('sky-' + envelope.room)
+            envelope.user = {}
+            envelope.user.address = addr
         @_sendMsg envelope.user.address, strings.join "\n"
 
     reply: (envelope, strings...) ->
@@ -50,7 +58,8 @@ class Skype extends Adapter
         user = @_createUser msg.user.id, msg.address
         # Remove <at id="28:...">name</at>. This is received by the bot when called from a group
         # Append robot name at the beggining
-        text = @robot.name + " " + msg.text.replace /.*<\/at>\s+(.*)$/, "$1"
+        text = @robot.name + " " + msg.text.replace /.*?<\/at>/, ""
+        text = text.replace /<.*?>/g, ''
         message = new TextMessage user, text, msg.address.id
         # @receive pass the message to Hubot internals
         @receive(message) if message?
